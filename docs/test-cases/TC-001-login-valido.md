@@ -3,7 +3,7 @@ id: TC-001
 title: Login con credenziali valide
 priority: high
 status: automated
-automation_ref: tests/login.robot
+automation_ref: tests/login1.robot
 ---
 
 ## Obiettivo
