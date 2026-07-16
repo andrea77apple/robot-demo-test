@@ -15,8 +15,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-      date_folder: ${{ steps.datefolder.outputs.date_folder }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,23 +27,19 @@ jobs:
       - name: Install Robot Framework
         run: pip install robotframework
 
-      - name: Set date folder
-        id: datefolder
-        run: echo "date_folder=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
       - name: Run tests
-        run: robot --outputdir results/${{ steps.datefolder.outputs.date_folder }} tests/
+        run: robot --outputdir report tests/
         continue-on-error: true
 
       - name: Copy index.html to report folder
-        run: cp docs/index-template.html results/${{ steps.datefolder.outputs.date_folder }}/index.html
+        run: cp docs/index-template.html report/index.html
 
-      - name: Upload test report
+      - name: Upload report as artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: robot-report-${{ steps.datefolder.outputs.date_folder }}
-          path: results/${{ steps.datefolder.outputs.date_folder }}/
+          name: robot-report
+          path: report/
           retention-days: 30
 
   publish:
@@ -61,8 +55,8 @@ jobs:
       - name: Download report
         uses: actions/download-artifact@v4
         with:
-          name: robot-report-${{ needs.test.outputs.date_folder }}
-          path: results/${{ needs.test.outputs.date_folder }}
+          name: robot-report
+          path: report
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -70,7 +64,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: results/${{ needs.test.outputs.date_folder }}
+          path: report
 
       - name: Deploy to GitHub Pages
         id: deployment
