@@ -21,5 +21,6 @@ TC-001 Login Con Credenziali Valide
     ...                Verifica che il sito example.com sia raggiungibile e il titolo visibile e corretto.
     [Tags]    login    smoke    high
     Apri Browser Headless
-    Title Should Contain    ${TITOLO_ATTESO}
+    ${titolo}=    Get Title
+    Should Contain    ${titolo}    ${TITOLO_ATTESO}
     [Teardown]    Close Browser
