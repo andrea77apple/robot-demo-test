@@ -19,6 +19,7 @@ Elenco di tutti i test automatizzati presenti nei file `.robot`:
 | ID | Nome Test | File | Tag | Descrizione | Documento di riferimento |
 |---|---|---|---|---|---|
 | TC-001 | Login Con Credenziali Valide | `tests/login1.robot` | `login`, `smoke`, `high` | Verifica che il sito `example.com` sia raggiungibile e che il titolo della pagina contenga "Example" | [TC-001-login-valido.md](docs/test-cases/TC-001-login-valido.md) |
+| TC-002 | Verifica Presenza Link | `tests/login1.robot` | `link`, `smoke`, `medium` | Verifica che nella pagina sia presente il link con XPath `/html[1]/body[1]/div[1]/p[2]/a[1]` | [TC-002-verifica-link.md](docs/test-cases/TC-002-verifica-link.md) |
 
 ## Report
 
