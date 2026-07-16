@@ -12,6 +12,14 @@ Contiene una suite di test automatizzati pensata per verificare la raggiungibili
 | `docs/test-cases/` | Documentazione dei test case (formato markdown) |
 | `run/` | Script e istruzioni per l'esecuzione dei test |
 
+## Test Case
+
+Elenco di tutti i test automatizzati presenti nei file `.robot`:
+
+| ID | Nome Test | File | Tag | Descrizione | Documento di riferimento |
+|---|---|---|---|---|---|
+| TC-001 | Login Con Credenziali Valide | `tests/login1.robot` | `login`, `smoke`, `high` | Verifica che il sito `example.com` sia raggiungibile e che il titolo della pagina contenga "Example" | [TC-001-login-valido.md](docs/test-cases/TC-001-login-valido.md) |
+
 ## Report
 
 L'ultimo report di esecuzione è disponibile qui:  
