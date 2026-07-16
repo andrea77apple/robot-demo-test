@@ -29,12 +29,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install Robot Framework and dependencies
-        run: pip install robotframework robotframework-seleniumlibrary
+        run: pip install robotframework robotframework-browser
 
-      - name: Verify Chrome installation
-        run: |
-          google-chrome --version
-          chromedriver --version || echo "chromedriver non trovato, selenium-manager lo gestirà automaticamente"
+      - name: Initialize Playwright browsers
+        run: rfbrowser init chromium
 
       - name: Set execution date
         id: set_date
