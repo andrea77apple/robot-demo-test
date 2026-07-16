@@ -34,7 +34,7 @@ jobs:
         run: echo "date_folder=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Run tests
-        run: robot --outputdir results/${{ steps.datefolder.outputs.date_folder }} --timestampoutputs tests/
+        run: robot --outputdir results/${{ steps.datefolder.outputs.date_folder }} tests/
         continue-on-error: true
 
       - name: Upload test report
@@ -48,6 +48,12 @@ jobs:
   publish:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Download report
         uses: actions/download-artifact@v4
@@ -55,9 +61,14 @@ jobs:
           name: robot-report-${{ needs.test.outputs.date_folder }}
           path: results/${{ needs.test.outputs.date_folder }}
 
-      - name: Deploy to GitHub Pages (with history)
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: results
-          keep_files: true
+          path: results/${{ needs.test.outputs.date_folder }}
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
