@@ -15,6 +15,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      date_folder: ${{ steps.datefolder.outputs.date_folder }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,35 +29,35 @@ jobs:
       - name: Install Robot Framework
         run: pip install robotframework
 
+      - name: Set date folder
+        id: datefolder
+        run: echo "date_folder=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
       - name: Run tests
-        run: robot --outputdir results tests/
+        run: robot --outputdir results/${{ steps.datefolder.outputs.date_folder }} --timestampoutputs tests/
         continue-on-error: true
 
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: robot-report
-          path: results/
-          retention-days: 7
+          name: robot-report-${{ steps.datefolder.outputs.date_folder }}
+          path: results/${{ steps.datefolder.outputs.date_folder }}/
+          retention-days: 30
 
   publish:
     needs: test
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     steps:
       - name: Download report
         uses: actions/download-artifact@v4
         with:
-          name: robot-report
-          path: results/
+          name: robot-report-${{ needs.test.outputs.date_folder }}
+          path: results/${{ needs.test.outputs.date_folder }}
 
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages (with history)
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: results/
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: results
+          keep_files: true
